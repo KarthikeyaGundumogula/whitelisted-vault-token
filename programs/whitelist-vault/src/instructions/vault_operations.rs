@@ -4,7 +4,7 @@ use anchor_spl::{
     token_interface::{Mint, TokenAccount, TokenInterface},
 };
 
-use crate::UserVault;
+use crate::{UserVault, VaultConfig};
 
 #[derive(Accounts)]
 pub struct VaultOps<'info> {
@@ -14,9 +14,14 @@ pub struct VaultOps<'info> {
       init_if_needed,
       payer = user,
       space = 8+UserVault::INIT_SPACE,
-      seeds=[b"user-vault",user_ata.key().as_ref()],
+      seeds=[b"user-vault",user.key().as_ref()],
       bump)]
-    pub vault: Account<'info, UserVault>,
+    pub user_vault: Account<'info, UserVault>,
+    #[account(
+        seeds = [b"vault-config"],
+        bump = config.bump
+    )]
+    pub config: Account<'info,VaultConfig>,
     pub mint: InterfaceAccount<'info, Mint>,
     #[account(
         token::mint = mint,
@@ -24,10 +29,9 @@ pub struct VaultOps<'info> {
     )]
     pub user_ata: InterfaceAccount<'info, TokenAccount>,
     #[account(
-        init_if_needed,
-        payer = user,
+        mut,
         associated_token::mint = mint,
-        associated_token::authority = vault,
+        associated_token::authority = user_vault,
     )]
     pub vault_ata: InterfaceAccount<'info, TokenAccount>,
     pub associated_token_program: Program<'info, AssociatedToken>,

@@ -1,3 +1,4 @@
+use crate::ID;
 use anchor_lang::prelude::*;
 use anchor_spl::token_interface::Mint;
 use spl_tlv_account_resolution::{
@@ -25,18 +26,21 @@ pub struct InitExtraAccMeta<'info> {
 
 impl<'info> InitExtraAccMeta<'info> {
     pub fn extra_account_metas() -> Result<Vec<ExtraAccountMeta>> {
+        let (config, _bump) = Pubkey::find_program_address(&[b"vault-config"], &ID);
+        let config_pda =
+            ExtraAccountMeta::new_with_pubkey(&config.to_bytes().into(), false, false).unwrap();
         let signer_status_pda = ExtraAccountMeta::new_with_seeds(
             &[
                 Seed::Literal {
                     bytes: b"user-acc".to_vec(),
                 },
-                Seed::AccountKey { index: 3 }, // index 2= destination
+                Seed::AccountKey { index: 3 }, // index 3= owner
             ],
             false, // is_signer
             false, // is_writable
         )
         .unwrap();
-        let account_metas = vec![signer_status_pda];
+        let account_metas = vec![signer_status_pda, config_pda];
 
         Ok(account_metas)
     }

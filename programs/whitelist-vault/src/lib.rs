@@ -16,7 +16,5 @@ declare_id!("8V7ou9PByAPVdbAetGAPbh3n4WqUVrPgDyzQgDjyTrNC");
 pub mod whitelist_vault {
     use super::*;
 
-    pub fn initialize(ctx: Context<Initialize>) -> Result<()> {
-        initialize::handler(ctx)
-    }
+
 }
