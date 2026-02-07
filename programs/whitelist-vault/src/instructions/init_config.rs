@@ -31,11 +31,11 @@ pub struct InitConfig<'info> {
 }
 
 impl<'info> InitConfig<'info> {
-    pub fn handler(ctx: Context<Self>, bumps: InitConfigBumps) -> Result<()> {
-        let vault_config = &mut ctx.accounts.vault_config;
-        vault_config.admin = ctx.accounts.admin.key();
-        vault_config.mint = ctx.accounts.mint.key();
-        vault_config.vault_ata = ctx.accounts.vault_ata.key();
+    pub fn init(&mut self, bumps: InitConfigBumps) -> Result<()> {
+        let vault_config = &mut self.vault_config;
+        vault_config.admin = self.admin.key();
+        vault_config.mint = self.mint.key();
+        vault_config.vault_ata = self.vault_ata.key();
         vault_config.bump = bumps.vault_config;
         Ok(())
     }

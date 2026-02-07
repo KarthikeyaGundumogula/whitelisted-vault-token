@@ -12,7 +12,7 @@ use anchor_spl::{
     token_interface::{Mint, TokenAccount},
 };
 
-use crate::state::UserVault;
+use crate::{VaultConfig, state::UserVault};
 
 #[derive(Accounts)]
 pub struct TransferHook<'info> {
@@ -36,6 +36,11 @@ pub struct TransferHook<'info> {
         bump ,
     )]
     pub user_vault: Account<'info, UserVault>,
+    #[account(
+        seeds = [b"vault-config"],
+        bump = config.bump
+    )]
+    pub config: Account<'info,VaultConfig>
 }
 
 impl<'info> TransferHook<'info> {
@@ -45,11 +50,12 @@ impl<'info> TransferHook<'info> {
 
         self.check_is_transferring()?;
 
+        if self.destination_token_ata.key() == self.config.vault_ata {
         if self.user_vault.whitelist_status{
-            msg!("Transfer allowed: The address is whitelisted");
+            msg!("Deposit allowed: The address is whitelisted");
         } else {
             panic!("TransferHook: Address is not whitelisted");
-        }
+        }}
 
         Ok(())
     }

@@ -3,7 +3,7 @@ use anchor_lang::prelude::*;
 #[derive(InitSpace)]
 #[account]
 pub struct UserVault {
-    pub offer: u64,
+    pub balance: u64,
     pub whitelist_status: bool,
     pub bump: u8,
 }
