@@ -1,8 +1,8 @@
 use anchor_lang::prelude::*;
 use anchor_spl::{
-    associated_token::AssociatedToken, token_2022::spl_token_2022::{
-        self, extension::memo_transfer::instruction::enable_required_transfer_memos,
-    }, token_interface::{Mint, TokenAccount, TokenInterface}
+    associated_token::AssociatedToken,
+    token_2022::spl_token_2022::extension::memo_transfer::instruction::enable_required_transfer_memos,
+    token_interface::{Mint, TokenAccount, TokenInterface},
 };
 
 use crate::VaultConfig;
@@ -57,10 +57,7 @@ impl<'info> InitConfig<'info> {
         )?;
 
         // Create signer seeds for the vault_config PDA
-        let seeds = &[
-            b"vault-config".as_ref(),
-            &[bumps.vault_config],
-        ];
+        let seeds = &[b"vault-config".as_ref(), &[bumps.vault_config]];
         let signer_seeds = &[&seeds[..]];
 
         // Invoke the instruction with PDA as signer

@@ -32,15 +32,15 @@ pub mod whitelist_vault {
         Ok(())
     }
 
-    // pub fn deposit(ctx:Context<VaultOps>,amount:u64) -> Result<()>{
-    //     ctx.accounts.deposit(amount)?;
-    //     Ok(())
-    // }
+    pub fn deposit(ctx:Context<Deposit>,amount:u64,nonce:u64) -> Result<()>{
+        ctx.accounts.deposit(amount,nonce)?;
+        Ok(())
+    }
 
-    // pub fn withdraw(ctx:Context<VaultOps>) -> Result<()> {
-    //     ctx.accounts.withdraw()?;
-    //     Ok(())
-    // }
+    pub fn withdraw(ctx:Context<Withdraw>,amount: u64) -> Result<()> {
+        ctx.accounts.withdraw(amount)?;
+        Ok(())
+    }
 
     #[instruction(discriminator = ExecuteInstruction::SPL_DISCRIMINATOR_SLICE)]
     pub fn transfer_hook(ctx: Context<TransferHook>, amount: u64) -> Result<()> {

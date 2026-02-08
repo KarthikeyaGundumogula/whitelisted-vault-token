@@ -63,9 +63,9 @@ impl Setup {
 
     fn load_program(svm: &mut LiteSVM, program_id: Pubkey) {
         let so_path =
-            PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../target/deploy/escrow_litesvm.so");
+            PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("target/deploy/whitelist_vault.so");
         let program_data = std::fs::read(so_path).expect("Failed to read program SO file");
-        svm.add_program(program_id, &program_data);
+        let _ = svm.add_program(program_id, &program_data);
     }
 
     fn create_mint(svm: &mut LiteSVM, payer: &Keypair, authority: &Pubkey) -> Pubkey {
