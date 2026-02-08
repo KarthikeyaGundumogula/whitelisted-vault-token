@@ -2,8 +2,12 @@ use anchor_lang::prelude::*;
 
 #[error_code]
 pub enum VaultError {
-    #[msg("Arithmatic operation failed")]
-    ArithmaticError,
-    #[msg("Insufficient balance in vault")]
+    #[msg("Arithmetic overflow occurred")]
+    ArithmeticError,
+    #[msg("Insufficient balance for withdrawal")]
     InsufficientBalance,
+    #[msg("Required memo not found in transaction")]
+    MemoNotFound,
+    #[msg("Invalid memo format")]
+    InvalidMemo
 }
