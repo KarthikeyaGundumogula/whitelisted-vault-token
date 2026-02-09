@@ -4,15 +4,31 @@ use {
     solana_sdk::{
         clock::Clock,
         message::{Instruction, Message},
-        pubkey::Pubkey,
+        pubkey::Pubkey as Address,
         signature::Keypair,
         signer::Signer,
         transaction::Transaction,
     },
 };
 
+use anchor_lang::prelude::Pubkey;
 use super::fixtures::*;
 
+
+use solana_sdk::instruction::AccountMeta as SdkAccountMeta;
+use anchor_lang::prelude::AccountMeta as AnchorAccountMeta;
+
+// Helper function to convert
+pub fn convert_account_metas(anchor_metas: Vec<AnchorAccountMeta>) -> Vec<SdkAccountMeta> {
+    anchor_metas
+        .into_iter()
+        .map(|meta| SdkAccountMeta {
+            pubkey: meta.pubkey.to_address(),
+            is_signer: meta.is_signer,
+            is_writable: meta.is_writable,
+        })
+        .collect()
+}
 /// Send a transaction to the LiteSVM
 pub fn send_transaction(instruction: Instruction, svm: &mut LiteSVM, signer: &Keypair) {
     let message = Message::new(&[instruction], Some(&signer.pubkey()));
@@ -36,21 +52,21 @@ pub fn assert_vault_state(
     expected_owner: &Pubkey,
     expected_mint: &Pubkey,
 ) {
-    let vault_data: Account = get_spl_account(svm, &vault).expect("Should deserialize vault data");
+    let vault_data: Account = get_spl_account(svm, &Address::from(vault.to_bytes())).expect("Should deserialize vault data");
 
     assert_eq!(
         vault_data.amount, expected_amount,
         "Vault amount mismatch: expected {}, got {}",
         expected_amount, vault_data.amount
     );
-    assert_eq!(&vault_data.owner, expected_owner, "Vault owner mismatch");
-    assert_eq!(&vault_data.mint, expected_mint, "Vault mint mismatch");
+    assert_eq!(&vault_data.owner.to_pubkey(), expected_owner, "Vault owner mismatch");
+    assert_eq!(&vault_data.mint.to_pubkey(), expected_mint, "Vault mint mismatch");
 }
 
 /// Assert vault account is closed (no data, no lamports)
 pub fn assert_vault_closed(svm: &LiteSVM, vault: &Pubkey) {
     let vault_account = svm
-        .get_account(vault)
+        .get_account(&Address::from(vault.to_bytes()))
         .expect("Should be able to check vault account");
 
     assert_eq!(
@@ -109,4 +125,9 @@ pub fn set_clock(svm: &mut LiteSVM, slot: u64, epoch: u64, unix_timestamp: i64) 
 /// Set clock to test values (uses constants from fixtures)
 pub fn set_test_clock(svm: &mut LiteSVM) {
     set_clock(svm, TEST_SLOT, TEST_EPOCH, TEST_UNIX_TIMESTAMP);
+}
+
+
+pub fn get_pubkey_from_address(key: Pubkey) -> Address {
+    Address::from(key.to_bytes())
 }

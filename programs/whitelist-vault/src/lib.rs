@@ -41,6 +41,21 @@ pub mod whitelist_vault {
         ctx.accounts.withdraw(amount)?;
         Ok(())
     }
+    
+    pub fn create_mint(
+        ctx: Context<CreateMint>,
+        name: String,
+        symbol: String,
+        uri: String,
+    ) -> Result<()> {
+        ctx.accounts.create_mint(name, symbol, uri)?;
+        Ok(())
+    }
+
+    pub fn mint_token(ctx: Context<MintToken>, amount: u64) -> Result<()> {
+        ctx.accounts.mint(amount)?;
+        Ok(())
+    }
 
     #[instruction(discriminator = ExecuteInstruction::SPL_DISCRIMINATOR_SLICE)]
     pub fn transfer_hook(ctx: Context<TransferHook>, amount: u64) -> Result<()> {

@@ -49,21 +49,7 @@ impl<'info> Withdraw<'info> {
             VaultError::InsufficientBalance
         );
 
-        let seeds = &[b"vault-config".as_ref(), &[self.config.bump]];
-        let signer_seeds = &[&seeds[..]];
-
-        let cpi_program = self.token_program.to_account_info();
-        let cpi_accounts = TransferChecked {
-            from: self.vault_ata.to_account_info(),
-            to: self.user_ata.to_account_info(),
-            authority: self.config.to_account_info(),
-            mint: self.mint.to_account_info(),
-        };
-
-        let cpi_ctx = CpiContext::new_with_signer(cpi_program, cpi_accounts, signer_seeds);
-        transfer_checked(cpi_ctx, amount, self.mint.decimals)?;
-
-        // 4. Update user vault balance
+        // 1. Update user vault balance
         self.user_vault.balance = self
             .user_vault
             .balance
