@@ -25,7 +25,7 @@ pub mod whitelist_vault {
     }
 
     pub fn whitelist_user(ctx: Context<WhitelistOperations>, user: Pubkey) -> Result<()> {
-        ctx.accounts.whitelist_user(user)?;
+        ctx.accounts.whitelist_user(user,ctx.bumps)?;
         Ok(())
     }
 

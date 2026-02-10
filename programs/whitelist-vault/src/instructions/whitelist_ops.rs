@@ -19,9 +19,13 @@ pub struct WhitelistOperations<'info> {
 }
 
 impl<'info> WhitelistOperations<'info> {
-    pub fn whitelist_user(&mut self, user: Pubkey) -> Result<()> {
+    pub fn whitelist_user(&mut self, user: Pubkey,bump:WhitelistOperationsBumps) -> Result<()> {
         msg!("user ata {} whitelisted", user);
         let new_user_vault = &mut self.user_vault;
+        if new_user_vault.bump == 0 {
+            new_user_vault.balance = 0;
+            new_user_vault.bump = bump.user_vault;
+        }
         new_user_vault.whitelist_status = true;
         Ok(())
     }

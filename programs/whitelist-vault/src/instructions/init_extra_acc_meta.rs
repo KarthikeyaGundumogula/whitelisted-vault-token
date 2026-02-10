@@ -32,7 +32,7 @@ impl<'info> InitExtraAccMeta<'info> {
         let signer_status_pda = ExtraAccountMeta::new_with_seeds(
             &[
                 Seed::Literal {
-                    bytes: b"user-acc".to_vec(),
+                    bytes: b"user-vault".to_vec(),
                 },
                 Seed::AccountKey { index: 3 }, // index 3= owner
             ],

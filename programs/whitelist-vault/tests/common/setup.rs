@@ -1,6 +1,6 @@
 use anchor_spl::associated_token::get_associated_token_address_with_program_id;
 use litesvm::LiteSVM;
-use litesvm_token::{CreateAssociatedTokenAccount};
+use litesvm_token::CreateAssociatedTokenAccount;
 use solana_sdk::{pubkey::Pubkey, signature::Keypair, signer::Signer};
 use std::path::PathBuf;
 
@@ -31,6 +31,9 @@ impl Setup {
         svm.airdrop(&admin.pubkey(), AIRDROP_AMOUNT)
             .expect("Failed to airdrop SOL to payer");
 
+        svm.airdrop(&user.pubkey(), AIRDROP_AMOUNT)
+            .expect("Failed to airdrop SOL to user");
+
         let program_id = Pubkey::from_str_const(&ID.to_string());
 
         // Load program
@@ -53,8 +56,9 @@ impl Setup {
         let vault_ata = get_associated_token_address_with_program_id(
             &vault_config.to_pubkey(),
             &mint.to_pubkey(),
-            &TOKEN_2022_PROGRAM_ID
-        ).to_address();
+            &TOKEN_2022_PROGRAM_ID,
+        )
+        .to_address();
 
         Setup {
             svm,
@@ -73,12 +77,13 @@ impl Setup {
     /// Create user ATA after mint has been created
     /// Note: vault_ata is created by init_config instruction
     pub fn create_user_ata(&mut self) {
-        self.user_ata = Self::create_ata(&mut self.svm, &self.admin, &self.mint, &self.user.pubkey());
+        self.user_ata =
+            Self::create_ata(&mut self.svm, &self.admin, &self.mint, &self.user.pubkey());
     }
 
     fn load_program(svm: &mut LiteSVM, program_id: Pubkey) {
-        let so_path =
-            PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../target/deploy/whitelist_vault.so");
+        let so_path = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+            .join("../../target/deploy/whitelist_vault.so");
         let program_data = std::fs::read(so_path).expect("Failed to read program SO file");
         let _ = svm.add_program(program_id, &program_data);
     }

@@ -17,7 +17,7 @@ pub struct MintToken<'info> {
     pub mint: InterfaceAccount<'info, Mint>,
 
     #[account(
-        init,
+        init_if_needed,
         payer = admin,
         associated_token::mint = mint,
         associated_token::authority = user,

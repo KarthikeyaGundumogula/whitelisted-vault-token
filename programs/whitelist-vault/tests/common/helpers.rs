@@ -6,7 +6,6 @@ use {
         message::{Instruction, Message},
         pubkey::Pubkey as Address,
         signature::Keypair,
-        signer::Signer,
         transaction::Transaction,
     },
 };
@@ -30,12 +29,12 @@ pub fn convert_account_metas(anchor_metas: Vec<AnchorAccountMeta>) -> Vec<SdkAcc
 }
 /// Send a transaction to the LiteSVM
 pub fn send_transaction(
-    instruction: Instruction,
+    instruction: &[Instruction],
     svm: &mut LiteSVM,
     signers: &[Keypair],
     payer: Pubkey,
 ) {
-    let message = Message::new(&[instruction], Some(&payer.to_address()));
+    let message = Message::new(instruction, Some(&payer.to_address()));
     let recent_blockhash = svm.latest_blockhash();
     let transaction = Transaction::new(signers, message, recent_blockhash);
 

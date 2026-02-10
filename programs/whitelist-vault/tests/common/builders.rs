@@ -133,7 +133,7 @@ pub fn mint_token_builder(setup: &Setup) -> Instruction {
     .to_account_metas(None);
     let sdk_accounts = convert_account_metas(anchor_accounts);
     let data = whitelist_vault::instruction::MintToken {
-        amount: MINT_AMOUNT,
+        amount: 2 * MINT_AMOUNT,
     }
     .data();
 
