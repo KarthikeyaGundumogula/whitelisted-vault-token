@@ -9,5 +9,5 @@ pub enum VaultError {
     #[msg("Required memo not found in transaction")]
     MemoNotFound,
     #[msg("Invalid memo format")]
-    InvalidMemo
+    InvalidMemo,
 }

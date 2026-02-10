@@ -11,12 +11,11 @@ use {
     },
 };
 
-use anchor_lang::prelude::Pubkey;
 use super::fixtures::*;
+use anchor_lang::prelude::Pubkey;
 
-
-use solana_sdk::instruction::AccountMeta as SdkAccountMeta;
 use anchor_lang::prelude::AccountMeta as AnchorAccountMeta;
+use solana_sdk::instruction::AccountMeta as SdkAccountMeta;
 
 // Helper function to convert
 pub fn convert_account_metas(anchor_metas: Vec<AnchorAccountMeta>) -> Vec<SdkAccountMeta> {
@@ -52,15 +51,24 @@ pub fn assert_vault_state(
     expected_owner: &Pubkey,
     expected_mint: &Pubkey,
 ) {
-    let vault_data: Account = get_spl_account(svm, &Address::from(vault.to_bytes())).expect("Should deserialize vault data");
+    let vault_data: Account = get_spl_account(svm, &Address::from(vault.to_bytes()))
+        .expect("Should deserialize vault data");
 
     assert_eq!(
         vault_data.amount, expected_amount,
         "Vault amount mismatch: expected {}, got {}",
         expected_amount, vault_data.amount
     );
-    assert_eq!(&vault_data.owner.to_pubkey(), expected_owner, "Vault owner mismatch");
-    assert_eq!(&vault_data.mint.to_pubkey(), expected_mint, "Vault mint mismatch");
+    assert_eq!(
+        &vault_data.owner.to_pubkey(),
+        expected_owner,
+        "Vault owner mismatch"
+    );
+    assert_eq!(
+        &vault_data.mint.to_pubkey(),
+        expected_mint,
+        "Vault mint mismatch"
+    );
 }
 
 /// Assert vault account is closed (no data, no lamports)
@@ -126,7 +134,6 @@ pub fn set_clock(svm: &mut LiteSVM, slot: u64, epoch: u64, unix_timestamp: i64) 
 pub fn set_test_clock(svm: &mut LiteSVM) {
     set_clock(svm, TEST_SLOT, TEST_EPOCH, TEST_UNIX_TIMESTAMP);
 }
-
 
 pub fn get_pubkey_from_address(key: Pubkey) -> Address {
     Address::from(key.to_bytes())

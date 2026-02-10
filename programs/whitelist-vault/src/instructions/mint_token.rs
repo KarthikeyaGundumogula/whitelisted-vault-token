@@ -23,7 +23,7 @@ pub struct MintToken<'info> {
         associated_token::authority = user,
         associated_token::token_program = token_program,
     )]
-    pub user_token_account: InterfaceAccount<'info, TokenAccount>,
+    pub user_ata: InterfaceAccount<'info, TokenAccount>,
 
     pub system_program: Program<'info, System>,
     pub token_program: Interface<'info, TokenInterface>,
@@ -36,7 +36,7 @@ impl<'info> MintToken<'info> {
             self.token_program.to_account_info(),
             MintTo {
                 mint: self.mint.to_account_info(),
-                to: self.user_token_account.to_account_info(),
+                to: self.user_ata.to_account_info(),
                 authority: self.admin.to_account_info(),
             },
         );

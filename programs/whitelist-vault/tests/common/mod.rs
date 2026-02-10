@@ -1,7 +1,7 @@
-pub mod setup;
+pub mod builders;
 pub mod fixtures;
 pub mod helpers;
-pub mod builders;
+pub mod setup;
 
-pub use setup::Setup;
 pub use fixtures::*;
+pub use setup::Setup;

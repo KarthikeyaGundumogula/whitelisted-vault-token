@@ -11,10 +11,12 @@ pub struct Setup {
     pub svm: LiteSVM,
     pub admin: Keypair,
     pub user: Keypair,
+    pub mint_signer: Keypair,
     pub mint: Pubkey,
     pub user_ata: Pubkey,
     pub vault_ata: Pubkey,
     pub vault_config: Pubkey,
+    pub extra_acc_meta: Pubkey,
     pub user_vault: Pubkey,
 }
 
@@ -34,7 +36,8 @@ impl Setup {
         Self::load_program(&mut svm, program_id);
 
         // Create mints
-        let mint = Self::create_mint(&mut svm, &admin, &admin.pubkey());
+        let mint_signer = Keypair::new();
+        let mint = mint_signer.pubkey();
 
         // Create associated token accounts
         let user_ata = Self::create_ata(&mut svm, &user, &mint, &user.pubkey());
@@ -45,6 +48,9 @@ impl Setup {
         let user_vault =
             Pubkey::find_program_address(&[b"vault-config", user.pubkey().as_ref()], &program_id).0;
 
+        let extra_acc_meta =
+            Pubkey::find_program_address(&[b"extra-account-metas", mint.as_ref()], &program_id).0;
+
         let vault_ata = Self::create_ata(&mut svm, &admin, &mint, &vault_config);
         // Mint initial tokens
         Self::mint_initial_tokens(&mut svm, &user, &mint, &user_ata);
@@ -53,10 +59,12 @@ impl Setup {
             svm,
             admin,
             user,
+            mint_signer,
             mint,
             user_ata,
             vault_ata,
             vault_config,
+            extra_acc_meta,
             user_vault,
         }
     }
@@ -66,14 +74,6 @@ impl Setup {
             PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("target/deploy/whitelist_vault.so");
         let program_data = std::fs::read(so_path).expect("Failed to read program SO file");
         let _ = svm.add_program(program_id, &program_data);
-    }
-
-    fn create_mint(svm: &mut LiteSVM, payer: &Keypair, authority: &Pubkey) -> Pubkey {
-        CreateMint::new(svm, payer)
-            .decimals(MINT_DECIMALS)
-            .authority(authority)
-            .send()
-            .expect("Failed to create mint")
     }
 
     fn create_ata(svm: &mut LiteSVM, payer: &Keypair, mint: &Pubkey, owner: &Pubkey) -> Pubkey {

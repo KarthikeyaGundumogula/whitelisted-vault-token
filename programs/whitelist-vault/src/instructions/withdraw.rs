@@ -1,6 +1,6 @@
 use anchor_lang::prelude::*;
 use anchor_spl::token_interface::{
-    transfer_checked, Mint, TokenAccount, TokenInterface, TransferChecked,
+ Mint, TokenAccount, TokenInterface, 
 };
 
 use crate::{error::VaultError, UserVault, VaultConfig};

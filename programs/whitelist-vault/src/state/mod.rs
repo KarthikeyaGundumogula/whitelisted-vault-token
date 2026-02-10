@@ -10,7 +10,7 @@ pub struct UserVault {
 
 #[derive(InitSpace)]
 #[account]
-pub struct VaultConfig{
+pub struct VaultConfig {
     pub admin: Pubkey,
     pub mint: Pubkey,
     pub vault_ata: Pubkey,
