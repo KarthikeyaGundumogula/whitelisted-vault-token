@@ -42,7 +42,7 @@ impl<'a> DepositInstructionBuilder<'a> {
             mint: setup.mint.to_pubkey(),
             vault_ata: setup.vault_ata.to_pubkey(),
             instructions: SYSVAR_INSTRUCTION,
-            token_program: TOKEN_PROGRAM_ID,
+            token_program: TOKEN_2022_PROGRAM_ID,
             system_program: SYSTEM_PROGRAM,
         }
         .to_account_metas(None);
@@ -60,14 +60,14 @@ impl<'a> DepositInstructionBuilder<'a> {
     }
 }
 
-pub fn init_config_builder(setup: Setup) -> Instruction {
+pub fn init_config_builder(setup: &Setup) -> Instruction {
     let anchor_accounts = whitelist_vault::accounts::InitConfig {
         admin: setup.admin.pubkey().to_pubkey(),
         mint: setup.mint.to_pubkey(),
         vault_ata: setup.vault_ata.to_pubkey(),
         vault_config: setup.vault_config.to_pubkey(),
         associated_token_program: ASSOCIATED_TOKEN_PROGRAM_ID,
-        token_program: TOKEN_PROGRAM_ID,
+        token_program: TOKEN_2022_PROGRAM_ID,
         system_program: SYSTEM_PROGRAM,
     }
     .to_account_metas(None);
@@ -80,7 +80,7 @@ pub fn init_config_builder(setup: Setup) -> Instruction {
     }
 }
 
-pub fn init_extra_acc_builder(setup: Setup) -> Instruction {
+pub fn init_extra_acc_builder(setup: &Setup) -> Instruction {
     let anchor_accounts = whitelist_vault::accounts::InitExtraAccMeta {
         signer: setup.admin.pubkey().to_pubkey(),
         extra_acc_meta_list: setup.extra_acc_meta.to_pubkey(),
@@ -97,11 +97,11 @@ pub fn init_extra_acc_builder(setup: Setup) -> Instruction {
     }
 }
 
-pub fn create_mint_builder(setup: Setup) -> Instruction {
+pub fn create_mint_builder(setup: &Setup) -> Instruction {
     let anchor_accounts = whitelist_vault::accounts::CreateMint {
         admin: setup.admin.pubkey().to_pubkey(),
         mint: setup.mint_signer.pubkey().to_pubkey(),
-        token_program: TOKEN_PROGRAM_ID,
+        token_program: TOKEN_2022_PROGRAM_ID,
         system_program: SYSTEM_PROGRAM,
     }
     .to_account_metas(None);
@@ -120,14 +120,14 @@ pub fn create_mint_builder(setup: Setup) -> Instruction {
     }
 }
 
-pub fn mint_token_builder(setup: Setup) -> Instruction {
+pub fn mint_token_builder(setup: &Setup) -> Instruction {
     let anchor_accounts = whitelist_vault::accounts::MintToken {
         admin: setup.admin.pubkey().to_pubkey(),
         user: setup.user.pubkey().to_pubkey(),
         mint: setup.mint.to_pubkey(),
         user_ata: setup.user_ata.to_pubkey(),
         system_program: SYSTEM_PROGRAM,
-        token_program: TOKEN_PROGRAM_ID,
+        token_program: TOKEN_2022_PROGRAM_ID,
         associated_token_program: ASSOCIATED_TOKEN_PROGRAM_ID,
     }
     .to_account_metas(None);
@@ -144,7 +144,7 @@ pub fn mint_token_builder(setup: Setup) -> Instruction {
     }
 }
 
-pub fn whitelist_user_builder(setup: Setup) -> Instruction {
+pub fn whitelist_user_builder(setup: &Setup) -> Instruction {
     let anchor_accounts = whitelist_vault::accounts::WhitelistOperations {
         admin: setup.admin.pubkey().to_pubkey(),
         user_vault: setup.user_vault.to_pubkey(),

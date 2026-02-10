@@ -15,6 +15,8 @@ pub const TEST_EPOCH: u64 = 1000;
 pub const TEST_UNIX_TIMESTAMP: i64 = 6 * 86_400; // 6 days
 pub const TOKEN_PROGRAM_ID: Pubkey =
     Pubkey::from_str_const("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA");
+pub const TOKEN_2022_PROGRAM_ID: Pubkey =
+    Pubkey::from_str_const("TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb");
 pub const ASSOCIATED_TOKEN_PROGRAM_ID: Pubkey =
     Pubkey::from_str_const("ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL");
 pub const PROGRAM_ID: Pubkey =

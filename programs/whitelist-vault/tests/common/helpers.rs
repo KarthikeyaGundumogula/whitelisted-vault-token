@@ -29,10 +29,15 @@ pub fn convert_account_metas(anchor_metas: Vec<AnchorAccountMeta>) -> Vec<SdkAcc
         .collect()
 }
 /// Send a transaction to the LiteSVM
-pub fn send_transaction(instruction: Instruction, svm: &mut LiteSVM, signer: &Keypair) {
-    let message = Message::new(&[instruction], Some(&signer.pubkey()));
+pub fn send_transaction(
+    instruction: Instruction,
+    svm: &mut LiteSVM,
+    signers: &[Keypair],
+    payer: Pubkey,
+) {
+    let message = Message::new(&[instruction], Some(&payer.to_address()));
     let recent_blockhash = svm.latest_blockhash();
-    let transaction = Transaction::new(&[signer], message, recent_blockhash);
+    let transaction = Transaction::new(signers, message, recent_blockhash);
 
     let result = svm
         .send_transaction(transaction)
